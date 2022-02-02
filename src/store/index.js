@@ -1,14 +1,8 @@
 import configureStore from './configureStore'
-import * as actions from './api'
+import { addBug, loadBugs } from './bugs'
 
 const store = configureStore()
 console.log(store.getState())
 
 // Actions that indicate API calls
-store.dispatch(
-  actions.apiCallBegan({
-    url: '/bugs',
-    onSuccess: 'bugsReceived',
-    onError: 'apiRequestFailed'
-  })
-)
+store.dispatch(loadBugs())

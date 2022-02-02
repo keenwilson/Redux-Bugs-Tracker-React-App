@@ -1,41 +1,83 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { createSelector } from 'reselect'
-
-let lastId = 0
+import moment from 'moment'
+import { apiCallBegan } from './api'
 
 // Internally createSlice will call createAction() and createReducer()
 const slice = createSlice({
   name: 'bugs',
-  initialState: [],
+  initialState: { list: [], loading: false, lastFetch: null },
   reducers: {
     // actions => action handlers
     bugAdded: (bugs, action) => {
-      bugs.push({
-        id: ++lastId,
-        description: action.payload.description,
-        resolved: false
-      })
+      bugs.list.push(action.payload)
     },
     bugAssignedToUser: (bugs, action) => {
       const { bugId, userId } = action.payload
-      const index = bugs.findIndex(bug => bug.id === bugId)
-      bugs[index].userId = userId
+      const index = bugs.list.findIndex(bug => bug.id === bugId)
+      bugs.list[index].userId = userId
+    },
+    bugsReceived: (bugs, action) => {
+      bugs.list = action.payload
+      bugs.loading = false
+      bugs.lastFetch = Date.now()
+    },
+    bugsRequested: (bugs, action) => {
+      bugs.loading = true
+    },
+    bugsRequestFailed: (bugs, action) => {
+      bugs.loading = false
     },
     bugResolved: (bugs, action) => {
-      const index = bugs.findIndex(bug => bug.id === action.payload.id)
-      bugs[index].resolved = true
+      const index = bugs.list.findIndex(bug => bug.id === action.payload.id)
+      bugs.list[index].resolved = true
     },
     bugRemoved: (bugs, action) => {
-      bugs.filter(bug => bug.id !== action.payload.id)
+      bugs.list.filter(bug => bug.id !== action.payload.id)
     }
   }
 })
 
 // Name export actions outside of the module
-export const { bugAdded, bugAssignedToUser, bugResolved, bugRemoved } =
-  slice.actions
+export const {
+  bugAdded,
+  bugAssignedToUser,
+  bugsReceived,
+  bugRemoved,
+  bugsRequested,
+  bugsRequestFailed,
+  bugResolved
+} = slice.actions
 // Reducer has to be a default export in ducks pattern
 export default slice.reducer
+
+// Action Creators
+const url = '/bugs'
+
+export const loadBugs = () => (dispatch, getState) => {
+  const { lastFetch } = getState().entities.bugs
+
+  const diffInMinutes = moment().diff(moment(lastFetch), 'minutes')
+
+  if (diffInMinutes < 10) return
+
+  dispatch(
+    apiCallBegan({
+      url,
+      onStart: bugsRequested.type,
+      onSuccess: bugsReceived.type,
+      onError: bugsRequestFailed.type
+    })
+  )
+}
+
+export const addBug = bug =>
+  apiCallBegan({
+    url,
+    method: 'post',
+    data: bug,
+    onSuccess: bugAdded.type
+  })
 
 // Selector
 

@@ -42,25 +42,28 @@ Using `react-redux` library to connecting React app to Reduc store
 - Add a bug
 
 ```
-{
-  type: "bugAdded",
-  payload: {
-    desciption: "..."
-  }
-}
+export const bugAdded = description => ({
+    type: BUG_ADDED,
+    payload: {
+        description
+    }
+})
+```
+
 ```
 
 - Mark as Resolved
-- Delete a Bug
 
 ```
-{
-  type: "bugAdded",
-  payload: {
-    id: 1
-  }
-}
+export const bugResolved = id => ({
+    type: BUG_ADDED,
+    payload: {
+        id
+    }
+})
 ```
+
+
 
 ### Create a Reducer
 

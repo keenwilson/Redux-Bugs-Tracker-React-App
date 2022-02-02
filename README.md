@@ -1,6 +1,6 @@
 # Bugs Tracker Application using Redux
 
-Using `react-redux` library to connecting React app to Reduc store
+Using `react-redux` library to connecting React app to Redux store
 
 ## React UI
 
@@ -12,6 +12,8 @@ Using `react-redux` library to connecting React app to Reduc store
   - Change the status to in progress
   - Filter the list of bugs
   - Sort the list of bugs
+  - Assign a bug to a team member
+  - Get the list of bugs assigned to a team member
 
 ## Redux
 

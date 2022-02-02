@@ -17,11 +17,11 @@ const slice = createSlice({
       });
     },
     bugResolved: (bugs, action) => {
-      const index = bugs.findIndex((bug) => bug.id === action.payload.id);
+      const index = bugs.findIndex(bug => bug.id === action.payload.id);
       bugs[index].resolved = true;
     },
     bugRemoved: (bugs, action) => {
-      bugs.filter((bug) => bug.id !== action.payload.id);
+      bugs.filter(bug => bug.id !== action.payload.id);
     }
   }
 });
@@ -38,7 +38,7 @@ export default slice.reducer;
 //  f(x) => y { input : 1 , output : 2 }
 // If the list of bugs is not change => get unresolved bugs from the cache
 export const getUnresolvedBugs = createSelector(
-  (state) => state.entities.bugs,
-  (state) => state.entities.projects,
-  (bugs, projects) => bugs.filter((bug) => !bug.resolved)
+  state => state.entities.bugs,
+  state => state.entities.projects,
+  (bugs, projects) => bugs.filter(bug => !bug.resolved)
 );

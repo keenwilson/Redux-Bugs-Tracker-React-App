@@ -72,14 +72,26 @@ export const bugResolved = id => ({
 `Reducer` is a pure function -- if it is called multiple time, given the same argument , it always return the same result. It's free of side effects. It will not touch DOM elements, not touch global states, not make API calls because all these operations can change the state of our system as a whole.
 
 ```
-function reducer(state, action) {
-  if (action.type === "bugAdded") {
-    return [
-      ...state,
-      id: ++lasId,
-      description: action.payload.description,
-      resolved: false
-    ]
-  }
+// Reducer
+let lasId = 0
+
+// Reducer has to be a default export in ducks pattern
+export default function reducer(state = [], action) {
+    switch (action.type) {
+        case bugAdded.type:
+            return [
+                ...state,
+                {id: ++lasId,
+                description: action.payload.description,
+                resolved: false}
+            ]
+        case bugRemoved.type:
+            return state.filter(bug => bug.id !== action.payload.id)
+        case bugResolved.type:
+            // Update an existing bug object
+            return state.map(bug => bug.id !== action.payload.id ? bug : {...bug, resolved: true})
+        default:
+            return state
+    }
 }
 ```

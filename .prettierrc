@@ -5,9 +5,9 @@
     "singleQuote": true,  
     "trailingComma": "none",
     "jsxBracketSameLine": false,
-    "semi": true,
+    "semi": false,
     "endOfLine": "auto",
     "bracketSpacing": true,
     "proseWrap": "always",
-    "arrowParens": "avoid",
+    "arrowParens": "avoid"
 }

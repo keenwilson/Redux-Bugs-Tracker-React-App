@@ -16,6 +16,11 @@ const slice = createSlice({
         resolved: false
       });
     },
+    bugAssignedToUser: (bugs, action) => {
+      const { bugId, userId } = action.payload;
+      const index = bugs.findIndex(bug => bug.id === bugId);
+      bugs[index].userId = userId;
+    },
     bugResolved: (bugs, action) => {
       const index = bugs.findIndex(bug => bug.id === action.payload.id);
       bugs[index].resolved = true;
@@ -27,7 +32,8 @@ const slice = createSlice({
 });
 
 // Name export actions outside of the module
-export const { bugAdded, bugResolved, bugRemoved } = slice.actions;
+export const { bugAdded, bugAssignedToUser, bugResolved, bugRemoved } =
+  slice.actions;
 // Reducer has to be a default export in ducks pattern
 export default slice.reducer;
 
